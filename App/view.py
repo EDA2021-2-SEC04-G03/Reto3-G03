@@ -170,7 +170,35 @@ while True:
         maxLongitud=input("Ingrese el limite máximo de longitud ")
         minLongitud=input("Ingrese el limite minimo de longitud ")
         rta=controller.avistamientosPorZonaGeografica(catalogo,minLongitud,maxLongitud,minLatitud,maxLatitud)
-        print(rta)
+        print("Hay "+str(lt.size(rta))+" avistamientos dentro de la son geográfica")
+        if lt.size(rta)>=10:
+            ultimas=lt.subList(rta,lt.size(rta)-4,5)
+            primeras=lt.subList(rta,1,5)
+            x = PrettyTable() 
+            x.field_names = ["Fecha y hora","Ciudad", "Estado", "Pais", "Forma","Duracion (segundos)","Latitud","Longitud"]
+            for i in lt.iterator(primeras):
+                x.add_row([str(i["fechahora"]),str(i["ciudad"]),str(i["estado"]),str(i["pais"]),
+                str(i["forma"]),str(i["duracionsegundos"]),str(i["latitud"]),str(i["longitud"])])
+            x.max_width = 20
+            print("Los primeros 5 registros son: ")
+            print(x)
+            a = PrettyTable() 
+            a.field_names = ["Fecha y hora","Ciudad", "Estado", "Pais", "Forma","Duracion (segundos)","Latitud","Longitud"]
+            for i in lt.iterator(primeras):
+                a.add_row([str(i["fechahora"]),str(i["ciudad"]),str(i["estado"]),str(i["pais"]),
+                str(i["forma"]),str(i["duracionsegundos"]),str(i["latitud"]),str(i["longitud"])])
+            a.max_width = 20
+            print("Los ultimos 5 registros son: ")
+            print(a)
+        else:
+            x = PrettyTable() 
+            x.field_names = ["Fecha y hora","Ciudad", "Estado", "Pais", "Forma","Duracion (segundos)","Latitud","Longitud"]
+            for i in lt.iterator(rta):
+                x.add_row([str(i["fechahora"]),str(i["ciudad"]),str(i["estado"]),str(i["pais"]),
+                str(i["forma"]),str(i["duracionsegundos"]),str(i["latitud"]),str(i["longitud"])])
+                x.max_width = 20
+            print("los registros son:")
+            print(x)
     elif int(inputs[0]) > 6:
         print("No disponible")
         pass
