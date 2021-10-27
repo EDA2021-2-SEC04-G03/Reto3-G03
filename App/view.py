@@ -164,7 +164,14 @@ while True:
         x.max_width = 20
         print(a)
     
-    elif int(inputs[0]) > 4:
+    elif int(inputs[0])==5:
+        maxLatitud=input("Ingrese el limite máximo de latitud ")
+        minLatitud=input("Ingrese el limite minimo de latitud ")
+        maxLongitud=input("Ingrese el limite máximo de longitud ")
+        minLongitud=input("Ingrese el limite minimo de longitud ")
+        rta=controller.avistamientosPorZonaGeografica(catalogo,minLongitud,maxLongitud,minLatitud,maxLatitud)
+        print(rta)
+    elif int(inputs[0]) > 6:
         print("No disponible")
         pass
     else:

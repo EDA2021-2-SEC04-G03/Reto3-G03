@@ -229,6 +229,22 @@ def NumAvistamientosPorHoraMinuto (catalogo,inferior,superior):
     listaInfo=m.sort(listaInfo,cmpDatetime)
     dicRta={'avistamientos':numAvistamientos,'info':listaInfo}
     return(dicRta)
+def avistamientosPorZonaGeografica(catologo,longitudMin,longitudMax,latitudMin,latitudMax):
+    mapLongitud=catologo["indiceLongitud"]
+    rangoLongitud=om.keys(mapLongitud,longitudMin,longitudMax)
+    listaLongitud=lt.newList("ARRAY_LIST")
+    for i in lt.iterator(rangoLongitud):
+        keyvalue=om.get(mapLongitud,i)
+        value=me.getValue(keyvalue)
+        for n in lt.iterator(value):
+            lt.addLast(listaLongitud,n)
+    listaLongitud=m.sort(listaLongitud,cmpLatitudSort)
+    listaFinal=lt.newList("ARRAY_LIST")
+    for j in lt.iterator(listaLongitud):
+        latitud=j["latitud"]
+        if latitud>=latitudMin and latitud<=latitudMax:
+            lt.addLast(listaFinal,j)
+    return(listaFinal)
 # ___________________________________________________
 #Funciones para consultar info om#
 # ___________________________________________________
@@ -352,5 +368,6 @@ def cmpDatetime(dic1, dic2):
     date1=dic1["fechahora"]
     date2=dic2["fechahora"]
     return date1<date2
-
+def cmpLatitudSort(dic1,dic2):
+    return dic1["latitud"]<dic2["latitud"]
 # Funciones de ordenamiento
