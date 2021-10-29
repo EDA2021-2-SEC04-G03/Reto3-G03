@@ -229,6 +229,19 @@ def NumAvistamientosPorHoraMinuto (catalogo,inferior,superior):
     listaInfo=m.sort(listaInfo,cmpDatetime)
     dicRta={'avistamientos':numAvistamientos,'info':listaInfo}
     return(dicRta)
+#REQ 4
+def avistamientosRangoFecha (catalogo,inferior,superior):
+    mapFecha=catalogo["indiceFechas"]
+    keys=om.keys(mapFecha,inferior,superior)
+    numAvistamiento=lt.size(keys)
+    info= lt.newList("ARRAY_LIST")
+    for i in lt.iterator(keys):
+        keyvalue=om.get(mapFecha,i)
+        value=me.getValue(keyvalue)
+        for n in lt.iterator(value):
+            lt.addLast(info,n)
+    
+#REQ 5
 def avistamientosPorZonaGeografica(catologo,longitudMin,longitudMax,latitudMin,latitudMax):
     mapLongitud=catologo["indiceLongitud"]
     rangoLongitud=om.keys(mapLongitud,longitudMin,longitudMax)
