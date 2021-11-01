@@ -207,22 +207,26 @@ def addOrCreateListInMap(mapa, llave, elemento):
 # ___________________________________________________
 #REQ 1#
 def registrosPorCiudad(catalogo,nombreCiudad):
+    respuesta= lt.newList("ARRAY_LIST")
     par= mp.get(catalogo['indiceCiudad'], nombreCiudad)
     if par== None:
         registros=None
     else:
         mapaFechaCiudad= me.getValue(par)
         registros= om.valueSet(mapaFechaCiudad)
-    return(registros)
+        for registro in lt.iterator(registros):
+                lt.addLast(respuesta,registro)
+    return(respuesta)
 #REQ 2#
 def registrosEnRangoDuracion(catalogo,limiteMaximo,limiteMinimo):
     listaEnRango= lt.newList("ARRAY_LIST")
     listaDeMapas = om.values(catalogo['indiceDuracion'],limiteMinimo,limiteMaximo)
     if lt.isEmpty(listaDeMapas)==False:
         for Mapa in lt.iterator(listaDeMapas):
-            registros= om.valueSet(Mapa)
-            for registro in lt.iterator(registros):
-                lt.addLast(listaEnRango,registro)
+            registrosCiudad= om.valueSet(Mapa)
+            for registros in lt.iterator(registrosCiudad):
+                for registro in lt.iterator(registros):
+                    lt.addLast(listaEnRango,registro)
     return listaEnRango
 #REQ 3
 def NumAvistamientosPorHoraMinuto (catalogo,inferior,superior):

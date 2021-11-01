@@ -132,11 +132,10 @@ while True:
     elif int(inputs[0]) == 1:
         nombreCiudad = input('Nombre de la ciudad a consultar\n')
         registrosCiudad= controller.registrosPorCiudad(catalogo,nombreCiudad)
-        if registrosCiudad==None:
-            print("Ciudad no encontrada")
+        if registrosCiudad==None or lt.size(registrosCiudad) == 0:
+            print("Ciudad no encontrada/no hay registros para la ciudad ingresada")
         else:
             print("El total de avistamientos en "+ nombreCiudad+ " es: "+ str(lt.size(registrosCiudad)))
-            
             if lt.size(registrosCiudad) <= 3:
                 print("Hay 3 o menos registros, estos son:")
                 printRegistroReq1(registrosCiudad)
@@ -158,14 +157,14 @@ while True:
                      str(limiteMaximo)+" es: "+ str(lt.size(registrosEnRango)))
             if lt.size(registrosEnRango) <= 3:
                 print("Hay 3 o menos registros, estos son:")
-                printRegistroReq1(registrosEnRango)
+                printRegistro(registrosEnRango)
             elif lt.size(registrosEnRango) > 3:
                 primeras= lt.subList(registrosEnRango,1,3)
                 ultimas= lt.subList(registrosEnRango,lt.size(registrosEnRango)-2,3)
                 print("Los primeros 3 registros son:")  
-                printRegistroReq1(primeras)
+                printRegistro(primeras)
                 print("Los ultimos 3 registros son:") 
-                printRegistroReq1(ultimas)
+                printRegistro(ultimas)
 
     elif int(inputs[0]) == 3:
         inferior=input("Ingrese el limite inferior en formato HH:MM ")
