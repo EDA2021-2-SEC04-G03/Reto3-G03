@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+
 import config as cf
 import time
 import sys
@@ -29,7 +30,8 @@ from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.ADT import list as lt
 assert cf
-
+import folium
+from folium.plugins import MarkerCluster
 
 """
 La vista se encarga de la interacción con el usuario
@@ -55,6 +57,7 @@ def printMenu():
     print("3- Consultar el número de avistamientos por hora y minuto del día")
     print("4- Consultar el número de avistamientos en un rango de fechas")
     print("5- Consultar el número de avistamientos de una zona geográfica")
+    print("6- Visualizar los avistamientos de una zona geográfica (BONO)")
     print("10-Salir ")
 
 #Funciones para imprimir#
@@ -84,6 +87,26 @@ def printRegistroReq5(lista):
         x.add_row([str(i['fechahora']),ciudadPais,str(i["duracionsegundos"]),str(i["forma"]),str(i["latitud"]),str(i["longitud"])])
         x.max_width = 20
     print(x)   
+def mapaBONO(lista, lati,longi):
+    m = folium.Map(location=[lati, longi], zoom_start=5)
+    marker_cluster = MarkerCluster().add_to(m)
+    for i in lt.iterator(lista):
+        i=i["elements"][0]
+        lat= i["latitud"]
+        lon=i["longitud"]
+        ciudadPais=str(i["ciudad"])+"-"+str(i["pais"])
+        tooltipp="Click para mas información"
+        folium.Marker(
+            location=[lat, lon],
+            popup='</p><strong>Fecha y Hora:<strong></p>'+str(i['fechahora'])+'<p>Ciudad-País:</p>'+ciudadPais+
+                    '</p><p>Forma:</p>'+str(i["forma"]) +'<p>Duración:</p>'+str(i["duracionsegundos"])+
+                    '<p>Longitud:</p>'+str(i["longitud"])+'</p><p>Latitud:</p>'+str(i["latitud"])+'</p>',
+            tooltip=tooltipp,
+            icon=folium.Icon(color="green", icon="ok-sign"),
+                    ).add_to(marker_cluster)
+    m.save("mapa"+str(lati)+"-"+str(longi)+".html")
+
+
 """
 Menu principal
 """
@@ -142,7 +165,7 @@ while True:
                 printRegistro(primeras)
                 print("Los ultimos 3 registros son:") 
                 printRegistro(ultimas)
-                
+
     elif int(inputs[0]) == 3:
         inferior=input("Ingrese el limite inferior en formato HH:MM ")
         superior=input("Ingrese el limite superior en formato HH:MM ")
@@ -190,12 +213,25 @@ while True:
                 primeras= lt.subList(registrosArea,1,5)
                 ultimas= lt.subList(registrosArea,lt.size(registrosArea)-4,5)
                 print("Los primeros 5 registros son:")
-                print(str(primeras)) 
-                print(str(type(primeras)))
                 printRegistroReq5(primeras)
                 print("Los ultimos 5 registros son:") 
                 printRegistroReq5(ultimas)
-    elif int(inputs[0]) > 6:
+    elif int(inputs[0])==6:
+        maxLatitud= round(float(input("Ingrese el limite máximo de latitud ")),2)
+        minLatitud=round(float(input("Ingrese el limite minimo de latitud ")),2)
+        maxLongitud=round(float(input("Ingrese el limite máximo de longitud ")),2)
+        minLongitud=round(float(input("Ingrese el limite minimo de longitud ")),2)
+        registrosArea=controller.avistamientosPorZonaGeografica(catalogo,minLongitud,maxLongitud,minLatitud,maxLatitud)
+        if registrosArea==None or lt.isEmpty(registrosArea)==True:
+            print("Ciudad no encontrada")
+        else:
+            print("El total de avistamientos en el área es: "+ str(lt.size(registrosArea)))
+            lati= (maxLatitud+minLatitud)/2
+            longi=(maxLongitud+minLongitud)/2
+            mapaBONO(registrosArea, lati,longi)
+            print("Se ha guardado el mapa en el archivo:"+ "mapa"+str(lati)+"-"+str(longi)+".html")
+                  
+    elif int(inputs[0]) > 7:
         print("No disponible")
         pass
     else:
