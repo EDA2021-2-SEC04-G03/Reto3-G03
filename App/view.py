@@ -43,7 +43,7 @@ operación solicitada
 #  Ruta a los archivos
 # ___________________________________________________
 
-UFOfile = 'UFOS-utf8-small.csv'
+UFOfile = 'UFOS-utf8-large.csv'
 # ___________________________________________________
 #  Menu principal
 # ___________________________________________________
@@ -194,7 +194,25 @@ while True:
             str(i["forma"]),str(i["duracionsegundos"])])
         x.max_width = 20
         print(a)
-    
+    elif int(inputs[0]) == 4:
+        limiteMinimo  = input('Ingrese el límite inferior en formato AAAA-MM-DD:  ')
+        limiteMaximo= input('Ingrese el límite superior en formato AAAA-MM-DD:  ')
+        registrosEnRango= controller.registrosenRangoFecha(catalogo,limiteMinimo,limiteMaximo)
+        if registrosEnRango==None or lt.size(registrosEnRango)==0:
+            print("No se encontraron avistaamientos, en este rango. Revise entrada")
+        else:
+            print("El total de avistamientos entre "+ str(limiteMinimo)+ " y "+
+                     str(limiteMaximo)+" es: "+ str(lt.size(registrosEnRango)))
+            if lt.size(registrosEnRango) <= 3:
+                print("Hay 3 o menos registros, estos son:")
+                printRegistro(registrosEnRango)
+            elif lt.size(registrosEnRango) > 3:
+                primeras= lt.subList(registrosEnRango,1,3)
+                ultimas= lt.subList(registrosEnRango,lt.size(registrosEnRango)-2,3)
+                print("Los primeros 3 registros son:")  
+                printRegistro(primeras)
+                print("Los ultimos 3 registros son:") 
+                printRegistro(ultimas)
     elif int(inputs[0])==5:
         maxLatitud= round(float(input("Ingrese el limite máximo de latitud ")),2)
         minLatitud=round(float(input("Ingrese el limite minimo de latitud ")),2)

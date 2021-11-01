@@ -152,14 +152,19 @@ def updateHoraMinuto(map, registro):
     addOrCreateListInMap(map,duracion,registro)
 
 def updateFechas(map, registro):
-    """
-    Se toma la ciudad del registro y se busca si ya existe en el arbol
-    dicha  ciudad.  Si es asi, se adiciona el registro a su lista de registros.
-    Si no se encuentra creado un nodo para esa ciudad en el arbol se crea
-    """
-    time=registro["fechahora"]
-    duracion=datetime.date(time.year,time.month,time.day)
-    addOrCreateListInMap(map,duracion,registro)
+    fechaHora=registro["fechahora"]
+    soloFecha=datetime.date(fechaHora.year,fechaHora.month,fechaHora.day)
+    horaMinuto=(fechaHora.hour,fechaHora.minute)
+    if om.contains(map,soloFecha)==False:
+        mapaNuevoHora= om.newMap(omaptype='RBT',comparefunction=cmpHoraMinuto)
+        listaNueva=lt.newList("ARRAY_LIST")
+        lt.addLast(listaNueva,registro)
+        om.put(mapaNuevoHora,horaMinuto,listaNueva)
+        om.put(map,soloFecha,mapaNuevoHora)
+    else:
+        mapaExistenteHora= om.get(map,soloFecha)["value"]
+        addOrCreateListInMap(mapaExistenteHora,horaMinuto,registro)
+        om.put(map,soloFecha,mapaExistenteHora)
     return map
 
 def updateLatitud(map, registro):
@@ -247,16 +252,21 @@ def NumAvistamientosPorHoraMinuto (catalogo,inferior,superior):
     dicRta={'avistamientos':numAvistamientos,'info':listaInfo}
     return(dicRta)
 #REQ 4
-def avistamientosRangoFecha (catalogo,inferior,superior):
+def registrosenRangoFecha (catalogo,liminferior,limsuperior):
+    inferior= datetime.datetime.strptime(liminferior,'%Y-%m-%d')
+    inferior=datetime.date(inferior.year,inferior.month,inferior.day)
+    superior= datetime.datetime.strptime(limsuperior,'%Y-%m-%d')
+    superior=datetime.date(superior.year,superior.month,superior.day)
     mapFecha=catalogo["indiceFechas"]
-    keys=om.keys(mapFecha,inferior,superior)
-    numAvistamiento=lt.size(keys)
-    info= lt.newList("ARRAY_LIST")
-    for i in lt.iterator(keys):
-        keyvalue=om.get(mapFecha,i)
-        value=me.getValue(keyvalue)
-        for n in lt.iterator(value):
-            lt.addLast(info,n)
+    listaEnRangoFecha= lt.newList("ARRAY_LIST")
+    listaDeMapasporHora = om.values(mapFecha,inferior,superior)
+    if lt.isEmpty(listaDeMapasporHora)==False:
+        for Mapa in lt.iterator(listaDeMapasporHora):
+            registrosHora= om.valueSet(Mapa)
+            for registros in lt.iterator(registrosHora):
+                for registro in lt.iterator(registros):
+                    lt.addLast(listaEnRangoFecha,registro)
+    return listaEnRangoFecha
     
 #REQ 5
 def avistamientosPorZonaGeografica(catologo,longitudMin,longitudMax,latitudMin,latitudMax):

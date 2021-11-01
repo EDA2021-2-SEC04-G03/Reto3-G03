@@ -66,6 +66,10 @@ def registrosEnRangoDuracion(catalogo,limiteMaximo,limiteMinimo):
 def NumAvistamientosPorHoraMinuto (catalogo,inferior,superior):
     rta=model.NumAvistamientosPorHoraMinuto(catalogo,inferior,superior)
     return(rta)
+#REQ4#
+def registrosenRangoFecha(catalogo,limiteMaximo,limiteMinimo):
+    registros=model.registrosenRangoFecha(catalogo,limiteMaximo,limiteMinimo)
+    return registros
 #REQ 5
 def avistamientosPorZonaGeografica(catalogo,longitudMin,longitudMax,latitudMin,latitudMax):
     rta=model.avistamientosPorZonaGeografica(catalogo,longitudMin,longitudMax,latitudMin,latitudMax)
