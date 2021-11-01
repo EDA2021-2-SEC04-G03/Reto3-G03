@@ -127,15 +127,20 @@ def updateIndiceCiudad(map,ciudad,fecha, registro):
     return map
 
 def updateIndiceDuracion(map, registro):
-    """
-    Se toma la ciudad del registro y se busca si ya existe en el arbol
-    dicha  ciudad.  Si es asi, se adiciona el registro a su lista de registros.
-    Si no se encuentra creado un nodo para esa ciudad en el arbol se crea
-    """
     duracion = registro["duracionsegundos"]
-    addOrCreateListInMap(map,duracion,registro)
-
+    CiudadPais= registro["pais-ciudad"]
+    if om.contains(map,duracion)==False:
+        mapaNuevoCiudad= om.newMap(omaptype='RBT',comparefunction=cmpCiudades)
+        listaNueva=lt.newList("ARRAY_LIST")
+        lt.addLast(listaNueva,registro)
+        om.put(mapaNuevoCiudad,CiudadPais,listaNueva)
+        om.put(map,duracion,mapaNuevoCiudad)
+    else:
+        mapaExistenteCiudad= om.get(map,duracion)["value"]
+        addOrCreateListInMap(mapaExistenteCiudad,CiudadPais,registro)
+        om.put(map,duracion,mapaExistenteCiudad)
     return map
+
 def updateHoraMinuto(map, registro):
     """
     Se toma la ciudad del registro y se busca si ya existe en el arbol
@@ -211,15 +216,13 @@ def registrosPorCiudad(catalogo,nombreCiudad):
     return(registros)
 #REQ 2#
 def registrosEnRangoDuracion(catalogo,limiteMaximo,limiteMinimo):
-
     listaEnRango= lt.newList("ARRAY_LIST")
-    listaDeListas= lt.newList("ARRAY_LIST")
-    listaDeListas = om.values(catalogo['indiceDuracion'],limiteMinimo,limiteMaximo)
-    if lt.size(listaDeListas)>1:
-        for list in lt.iterator(listaDeListas):
-            for registro in lt.iterator(list):
+    listaDeMapas = om.values(catalogo['indiceDuracion'],limiteMinimo,limiteMaximo)
+    if lt.isEmpty(listaDeMapas)==False:
+        for Mapa in lt.iterator(listaDeMapas):
+            registros= om.valueSet(Mapa)
+            for registro in lt.iterator(registros):
                 lt.addLast(listaEnRango,registro)
-    m.sort(listaEnRango, cmpDuracionSort)
     return listaEnRango
 #REQ 3
 def NumAvistamientosPorHoraMinuto (catalogo,inferior,superior):

@@ -157,14 +157,14 @@ while True:
                      str(limiteMaximo)+" es: "+ str(lt.size(registrosEnRango)))
             if lt.size(registrosEnRango) <= 3:
                 print("Hay 3 o menos registros, estos son:")
-                printRegistro(registrosEnRango)
+                printRegistroReq1(registrosEnRango)
             elif lt.size(registrosEnRango) > 3:
                 primeras= lt.subList(registrosEnRango,1,3)
                 ultimas= lt.subList(registrosEnRango,lt.size(registrosEnRango)-2,3)
                 print("Los primeros 3 registros son:")  
-                printRegistro(primeras)
+                printRegistroReq1(primeras)
                 print("Los ultimos 3 registros son:") 
-                printRegistro(ultimas)
+                printRegistroReq1(ultimas)
 
     elif int(inputs[0]) == 3:
         inferior=input("Ingrese el limite inferior en formato HH:MM ")
