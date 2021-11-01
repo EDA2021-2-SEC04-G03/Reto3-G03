@@ -261,8 +261,9 @@ def avistamientosPorZonaGeografica(catologo,longitudMin,longitudMax,latitudMin,l
     ListaRangoLatyLon= lt.newList("ARRAYLIST")
     for mapaLongitudes in lt.iterator(ListadeMapasenRangoLatitud):
         listaRegistros= om.values(mapaLongitudes,longitudMin,longitudMax)
-        for registro in lt.iterator(listaRegistros):
-            lt.addLast(ListaRangoLatyLon,registro)
+        for registros in lt.iterator(listaRegistros):
+            for registro in lt.iterator(registros):
+                lt.addLast(ListaRangoLatyLon,registro)
     return(ListaRangoLatyLon)
 # ___________________________________________________
 #Funciones para consultar info om#

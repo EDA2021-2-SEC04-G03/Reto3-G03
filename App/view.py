@@ -82,7 +82,6 @@ def printRegistroReq5(lista):
     x = PrettyTable() 
     x.field_names = ["Fecha y hora","Ciudad, País","Duracion (segundos)","Forma","Latitud","Longitud"]
     for i in lt.iterator(lista):
-        i=i["elements"][0]
         ciudadPais=str(i["ciudad"])+", "+str(i["pais"])
         x.add_row([str(i['fechahora']),ciudadPais,str(i["duracionsegundos"]),str(i["forma"]),str(i["latitud"]),str(i["longitud"])])
         x.max_width = 20
@@ -91,7 +90,6 @@ def mapaBONO(lista, lati,longi):
     m = folium.Map(location=[lati, longi], zoom_start=5)
     marker_cluster = MarkerCluster().add_to(m)
     for i in lt.iterator(lista):
-        i=i["elements"][0]
         lat= i["latitud"]
         lon=i["longitud"]
         ciudadPais=str(i["ciudad"])+"-"+str(i["pais"])
@@ -210,6 +208,7 @@ while True:
             print("El total de avistamientos en el área es: "+ str(lt.size(registrosArea)))
             
             if lt.size(registrosArea) <= 5:
+                print(str(registrosArea))
                 print("Hay 5 o menos registros, estos son:")
                 printRegistroReq5(registrosArea)
             elif lt.size(registrosArea) > 5:
