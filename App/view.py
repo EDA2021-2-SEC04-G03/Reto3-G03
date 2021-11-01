@@ -58,7 +58,7 @@ def printMenu():
     print("4- Consultar el número de avistamientos en un rango de fechas")
     print("5- Consultar el número de avistamientos de una zona geográfica")
     print("6- Visualizar los avistamientos de una zona geográfica (BONO)")
-    print("10-Salir ")
+    print("x-Salir ")
 
 #Funciones para imprimir#
 def printRegistro(lista):
@@ -113,7 +113,10 @@ Menu principal
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
-    if int(inputs[0]) == 0:
+    if inputs[0]=="x" or inputs[0].isnumeric()==False:  
+        print("Hasta Luego, gracias") 
+        sys.exit(0)
+    elif int(inputs[0]) == 0:
         start_time = time.process_time()
         print("Cargando información de los archivos ....")
         catalogo = controller.init()
@@ -202,7 +205,7 @@ while True:
         minLongitud=round(float(input("Ingrese el limite minimo de longitud ")),2)
         registrosArea=controller.avistamientosPorZonaGeografica(catalogo,minLongitud,maxLongitud,minLatitud,maxLatitud)
         if registrosArea==None:
-            print("Ciudad no encontrada")
+            print("No se encontraron avistamientos en el área")
         else:
             print("El total de avistamientos en el área es: "+ str(lt.size(registrosArea)))
             
@@ -229,8 +232,7 @@ while True:
             lati= (maxLatitud+minLatitud)/2
             longi=(maxLongitud+minLongitud)/2
             mapaBONO(registrosArea, lati,longi)
-            print("Se ha guardado el mapa en el archivo:"+ "mapa"+str(lati)+"-"+str(longi)+".html")
-                  
+            print("Se ha guardado el mapa en el archivo:"+ "mapa"+str(lati)+"-"+str(longi)+".html")           
     elif int(inputs[0]) > 7:
         print("No disponible")
         pass
