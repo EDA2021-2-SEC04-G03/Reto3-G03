@@ -87,7 +87,7 @@ def printRegistroReq5(lista):
         x.max_width = 20
     print(x)   
 def mapaBONO(lista, lati,longi):
-    m = folium.Map(location=[lati, longi], zoom_start=5)
+    m = folium.Map(location=[lati, longi], zoom_start=4.5)
     marker_cluster = MarkerCluster().add_to(m)
     for i in lt.iterator(lista):
         lat= i["latitud"]
@@ -219,7 +219,7 @@ while True:
         maxLongitud=round(float(input("Ingrese el limite máximo de longitud ")),2)
         minLongitud=round(float(input("Ingrese el limite minimo de longitud ")),2)
         registrosArea=controller.avistamientosPorZonaGeografica(catalogo,minLongitud,maxLongitud,minLatitud,maxLatitud)
-        if registrosArea==None:
+        if registrosArea==None or lt.isEmpty(registrosArea)==True:
             print("No se encontraron avistamientos en el área")
         else:
             print("El total de avistamientos en el área es: "+ str(lt.size(registrosArea)))
@@ -242,7 +242,7 @@ while True:
         minLongitud=round(float(input("Ingrese el limite minimo de longitud ")),2)
         registrosArea=controller.avistamientosPorZonaGeografica(catalogo,minLongitud,maxLongitud,minLatitud,maxLatitud)
         if registrosArea==None or lt.isEmpty(registrosArea)==True:
-            print("Ciudad no encontrada")
+            print("No se encontraron avistamientos en el área")
         else:
             print("El total de avistamientos en el área es: "+ str(lt.size(registrosArea)))
             lati= (maxLatitud+minLatitud)/2
