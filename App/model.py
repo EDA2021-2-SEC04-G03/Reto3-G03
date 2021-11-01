@@ -132,7 +132,7 @@ def updateIndiceDuracion(map, registro):
     dicha  ciudad.  Si es asi, se adiciona el registro a su lista de registros.
     Si no se encuentra creado un nodo para esa ciudad en el arbol se crea
     """
-    duracion = registro["fechahora"]
+    duracion = registro["duracionsegundos"]
     addOrCreateListInMap(map,duracion,registro)
 
     return map
@@ -173,7 +173,6 @@ def updateLatitud(map, registro):
         om.put(mapaNuevoLongitud,longitud,listaNueva)
         om.put(map,latitud,mapaNuevoLongitud)
     else:
-        pareja=om.get(map,latitud)
         longitud=round(registro["longitud"],2)
         mapaExistenteLongitud= om.get(map,latitud)["value"]
         addOrCreateListInMap(mapaExistenteLongitud,longitud,registro)
@@ -317,7 +316,7 @@ def cmpDuracion(duracion1,duracion2):
     elif (duracion1 > duracion2):
         return 1
     else:
-        return -1 
+        return -1
 def cmpHoraMinuto(duracion1,duracion2):
     """
     Compara dos fechas
@@ -349,16 +348,6 @@ def cmpCoordenada(latitud1,latitud2):
     else:
         return -1 
 
-# def cmpLongitud(longitud1,longitud2):
-#     """
-#     Compara dos fechas
-#     """
-#     if (longitud1 == longitud2):
-#         return 0
-#     elif (longitud1 > longitud2):
-#         return 1
-#     else:
-#         return -1
 
 def cmpDuracionSort(dic1,dic2):
     """

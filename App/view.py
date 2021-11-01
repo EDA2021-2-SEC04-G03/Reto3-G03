@@ -124,13 +124,8 @@ while True:
                 print("Los ultimos 3 registros son:") 
                 printRegistroReq1(ultimas)
     elif int(inputs[0]) == 2:
-        print("información Arbol con indice=duracion")
-        print('Altura del arbol: ' + str(controller.indexHeight(catalogo,"indiceDuracion")))
-        print('Elementos en el arbol: ' + str(controller.indexSize(catalogo,"indiceDuracion")))
-        print('Menor Llave: ' + str(controller.minKey(catalogo,"indiceDuracion")))
-        print('Mayor Llave: ' + str(controller.maxKey(catalogo,"indiceDuracion")))
-        limiteMaximo = float(input('Ingrese el límite inferior en segundos (máximo):  '))
-        limiteMinimo = float(input('Ingrese el límite superior en segundos (mínimo):  '))
+        limiteMinimo  = float(input('Ingrese el límite inferior en segundos (mínimo):  '))
+        limiteMaximo= float(input('Ingrese el límite superior en segundos (máximo):  '))
         registrosEnRango= controller.registrosEnRangoDuracion(catalogo,limiteMaximo,limiteMinimo)
         if registrosEnRango==None or lt.size(registrosEnRango)==0:
             print("No se encontraron avistaamientos, en este rango. Revise el orden de entrada")
