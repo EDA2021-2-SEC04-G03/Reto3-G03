@@ -88,7 +88,7 @@ def addRegistro(catalogo, registro):
     dicRegistro["ciudad"]= registro["city"]
     dicRegistro["estado"]= registro["state"]
     dicRegistro["pais"]= registro["country"]
-    dicRegistro["pais-ciudad"]= (dicRegistro["pais"]) +"-"+ dicRegistro["ciudad"]
+    dicRegistro["pais-ciudad"]= (dicRegistro["ciudad"]) +"-"+ dicRegistro["pais"]
     dicRegistro["forma"]= registro["shape"]
     duracion= registro["duration (seconds)"]
     if duracion=="":
@@ -219,6 +219,7 @@ def registrosEnRangoDuracion(catalogo,limiteMaximo,limiteMinimo):
         for list in lt.iterator(listaDeListas):
             for registro in lt.iterator(list):
                 lt.addLast(listaEnRango,registro)
+    m.sort(listaEnRango, cmpDuracionSort)
     return listaEnRango
 #REQ 3
 def NumAvistamientosPorHoraMinuto (catalogo,inferior,superior):
@@ -355,17 +356,13 @@ def cmpDuracionSort(dic1,dic2):
     avistamientos de la misma duración,mostrarlos ordenados alfabéticamente 
     por su combinación ciudad y país (country-city).
     """
-    duracion1=dic1["duracion"]
-    duracion2=dic2["duracion"]
+    duracion1=dic1["duracionsegundos"]
+    duracion2=dic2["duracionsegundos"]
     if (duracion1 == duracion2):
-        if dic1["pais-ciudad"] > dic2["pais-ciudad"]:
-            return 1
-        else:
-            return-1
-    elif (duracion1 > duracion2):
-        return 1
+        return dic1["pais-ciudad"] < dic2["pais-ciudad"]
     else:
-        return -1
+        return (duracion1 < duracion2)
+
 def cmpDatetime(dic1, dic2):
     """
     Compara dos diccionarios por sus fechas

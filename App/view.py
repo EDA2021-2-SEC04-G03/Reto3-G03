@@ -142,6 +142,7 @@ while True:
                 printRegistro(primeras)
                 print("Los ultimos 3 registros son:") 
                 printRegistro(ultimas)
+                
     elif int(inputs[0]) == 3:
         inferior=input("Ingrese el limite inferior en formato HH:MM ")
         superior=input("Ingrese el limite superior en formato HH:MM ")
