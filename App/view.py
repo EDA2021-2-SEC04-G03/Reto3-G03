@@ -62,11 +62,28 @@ def printRegistro(lista):
     x = PrettyTable() 
     x.field_names = ["Fecha y hora","Ciudad", "Estado", "Pais", "Forma","Duracion (segundos)"]
     for i in lt.iterator(lista):
-        x.add_row([str(i["fechahora"]),str(i["ciudad"]),str(i["estado"]),str(i["pais"]),
+        x.add_row([str(i['fechahora']),str(i["ciudad"]),str(i["estado"]),str(i["pais"]),
             str(i["forma"]),str(i["duracionsegundos"])])
         x.max_width = 20
     print(x)
-
+def printRegistroReq1(lista):
+    x = PrettyTable() 
+    x.field_names = ["Fecha y hora","Ciudad", "Estado", "Pais", "Forma","Duracion (segundos)"]
+    for i in lt.iterator(lista):
+        i=i["elements"][0]
+        x.add_row([str(i['fechahora']),str(i["ciudad"]),str(i["estado"]),str(i["pais"]),
+            str(i["forma"]),str(i["duracionsegundos"])])
+        x.max_width = 20
+    print(x)
+def printRegistroReq5(lista):
+    x = PrettyTable() 
+    x.field_names = ["Fecha y hora","Ciudad, País","Duracion (segundos)","Forma","Latitud","Longitud"]
+    for i in lt.iterator(lista):
+        i=i["elements"][0]
+        ciudadPais=str(i["ciudad"])+", "+str(i["pais"])
+        x.add_row([str(i['fechahora']),ciudadPais,str(i["duracionsegundos"]),str(i["forma"]),str(i["latitud"]),str(i["longitud"])])
+        x.max_width = 20
+    print(x)   
 """
 Menu principal
 """
@@ -89,11 +106,6 @@ while True:
         timepaso= stop_time-start_time
         print("Tiempo transcurrido "+ str(timepaso))
     elif int(inputs[0]) == 1:
-        print("información Arbol con indice=ciudad")
-        print('Altura del arbol: ' + str(controller.indexHeight(catalogo,"indiceCiudad")))
-        print('Elementos en el arbol: ' + str(controller.indexSize(catalogo,"indiceCiudad")))
-        print('Menor Llave: ' + str(controller.minKey(catalogo,"indiceCiudad")))
-        print('Mayor Llave: ' + str(controller.maxKey(catalogo,"indiceCiudad")))
         nombreCiudad = input('Nombre de la ciudad a consultar\n')
         registrosCiudad= controller.registrosPorCiudad(catalogo,nombreCiudad)
         if registrosCiudad==None:
@@ -103,14 +115,14 @@ while True:
             
             if lt.size(registrosCiudad) <= 3:
                 print("Hay 3 o menos registros, estos son:")
-                printRegistro(registrosCiudad)
+                printRegistroReq1(registrosCiudad)
             elif lt.size(registrosCiudad) > 3:
                 primeras= lt.subList(registrosCiudad,1,3)
                 ultimas= lt.subList(registrosCiudad,lt.size(registrosCiudad)-2,3)
-                print("Los primeros 3 registros son:")  
-                printRegistro(primeras)
+                print("Los primeros 3 registros son:") 
+                printRegistroReq1(primeras)
                 print("Los ultimos 3 registros son:") 
-                printRegistro(ultimas)
+                printRegistroReq1(ultimas)
     elif int(inputs[0]) == 2:
         print("información Arbol con indice=duracion")
         print('Altura del arbol: ' + str(controller.indexHeight(catalogo,"indiceDuracion")))
@@ -165,40 +177,28 @@ while True:
         print(a)
     
     elif int(inputs[0])==5:
-        maxLatitud=input("Ingrese el limite máximo de latitud ")
-        minLatitud=input("Ingrese el limite minimo de latitud ")
-        maxLongitud=input("Ingrese el limite máximo de longitud ")
-        minLongitud=input("Ingrese el limite minimo de longitud ")
-        rta=controller.avistamientosPorZonaGeografica(catalogo,minLongitud,maxLongitud,minLatitud,maxLatitud)
-        print("Hay "+str(lt.size(rta))+" avistamientos dentro de la son geográfica")
-        if lt.size(rta)>=10:
-            ultimas=lt.subList(rta,lt.size(rta)-4,5)
-            primeras=lt.subList(rta,1,5)
-            x = PrettyTable() 
-            x.field_names = ["Fecha y hora","Ciudad", "Estado", "Pais", "Forma","Duracion (segundos)","Latitud","Longitud"]
-            for i in lt.iterator(primeras):
-                x.add_row([str(i["fechahora"]),str(i["ciudad"]),str(i["estado"]),str(i["pais"]),
-                str(i["forma"]),str(i["duracionsegundos"]),str(i["latitud"]),str(i["longitud"])])
-            x.max_width = 20
-            print("Los primeros 5 registros son: ")
-            print(x)
-            a = PrettyTable() 
-            a.field_names = ["Fecha y hora","Ciudad", "Estado", "Pais", "Forma","Duracion (segundos)","Latitud","Longitud"]
-            for i in lt.iterator(primeras):
-                a.add_row([str(i["fechahora"]),str(i["ciudad"]),str(i["estado"]),str(i["pais"]),
-                str(i["forma"]),str(i["duracionsegundos"]),str(i["latitud"]),str(i["longitud"])])
-            a.max_width = 20
-            print("Los ultimos 5 registros son: ")
-            print(a)
+        maxLatitud= round(float(input("Ingrese el limite máximo de latitud ")),2)
+        minLatitud=round(float(input("Ingrese el limite minimo de latitud ")),2)
+        maxLongitud=round(float(input("Ingrese el limite máximo de longitud ")),2)
+        minLongitud=round(float(input("Ingrese el limite minimo de longitud ")),2)
+        registrosArea=controller.avistamientosPorZonaGeografica(catalogo,minLongitud,maxLongitud,minLatitud,maxLatitud)
+        if registrosArea==None:
+            print("Ciudad no encontrada")
         else:
-            x = PrettyTable() 
-            x.field_names = ["Fecha y hora","Ciudad", "Estado", "Pais", "Forma","Duracion (segundos)","Latitud","Longitud"]
-            for i in lt.iterator(rta):
-                x.add_row([str(i["fechahora"]),str(i["ciudad"]),str(i["estado"]),str(i["pais"]),
-                str(i["forma"]),str(i["duracionsegundos"]),str(i["latitud"]),str(i["longitud"])])
-                x.max_width = 20
-            print("los registros son:")
-            print(x)
+            print("El total de avistamientos en el área es: "+ str(lt.size(registrosArea)))
+            
+            if lt.size(registrosArea) <= 5:
+                print("Hay 5 o menos registros, estos son:")
+                printRegistroReq5(registrosArea)
+            elif lt.size(registrosArea) > 5:
+                primeras= lt.subList(registrosArea,1,5)
+                ultimas= lt.subList(registrosArea,lt.size(registrosArea)-4,5)
+                print("Los primeros 5 registros son:")
+                print(str(primeras)) 
+                print(str(type(primeras)))
+                printRegistroReq5(primeras)
+                print("Los ultimos 5 registros son:") 
+                printRegistroReq5(ultimas)
     elif int(inputs[0]) > 6:
         print("No disponible")
         pass

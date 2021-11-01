@@ -63,8 +63,7 @@ def newCatalog():
                 }
 
     catalogo['registros'] = lt.newList('ARRAY_LIST')
-    catalogo['indiceCiudad'] =om.newMap(omaptype='RBT',
-                                      comparefunction=cmpCiudades)
+    catalogo['indiceCiudad'] = mp.newMap(50000,maptype="CHAINING",loadfactor=4)
     catalogo['indiceDuracion'] = om.newMap(omaptype='RBT',
                                       comparefunction=cmpDuracion)
     catalogo['indiceHoraMinuto'] = om.newMap(omaptype='RBT',
@@ -101,24 +100,32 @@ def addRegistro(catalogo, registro):
     dicRegistro["longitud"]= float(registro["longitude"])
 
     lt.addLast(catalogo['registros'], dicRegistro)
-    updateIndiceCiudad(catalogo['indiceCiudad'], dicRegistro)
+    updateIndiceCiudad(catalogo['indiceCiudad'],dicRegistro["ciudad"],dicRegistro["fechahora"], dicRegistro)
     updateIndiceDuracion(catalogo["indiceDuracion"], dicRegistro)
     updateHoraMinuto(catalogo["indiceHoraMinuto"],dicRegistro)
     updateFechas(catalogo["indiceFechas"],dicRegistro)
-    updateLatitud(catalogo["indiceLatitud"],dicRegistro,catalogo)
-    # updateLongitud(catalogo['indiceLongitud'],dicRegistro)
+    updateLatitud(catalogo["indiceLatitud"],dicRegistro)
     return catalogo
 
 
-def updateIndiceCiudad(map, registro):
+def updateIndiceCiudad(map,ciudad,fecha, registro):
     """
     Se toma la ciudad del registro y se busca si ya existe en el arbol
     dicha  ciudad.  Si es asi, se adiciona el registro a su lista de registros.
     Si no se encuentra creado un nodo para esa ciudad en el arbol se crea
     """
-    ciudad = registro['ciudad']
-    addOrCreateListInMap(map,ciudad,registro)
+    if mp.contains(map,ciudad)==False:
+        mapaNuevoFecha= om.newMap(omaptype='RBT',comparefunction=cmpFechas)
+        listaNueva=lt.newList("ARRAY_LIST")
+        lt.addLast(listaNueva,registro)
+        om.put(mapaNuevoFecha,fecha,listaNueva)
+        mp.put(map,ciudad,mapaNuevoFecha)
+    else:
+        mapaExistenteFecha= mp.get(map,ciudad)["value"]
+        addOrCreateListInMap(mapaExistenteFecha,fecha,registro)
+        mp.put(map,ciudad,mapaExistenteFecha)
     return map
+
 def updateIndiceDuracion(map, registro):
     """
     Se toma la ciudad del registro y se busca si ya existe en el arbol
@@ -150,7 +157,7 @@ def updateFechas(map, registro):
     addOrCreateListInMap(map,duracion,registro)
     return map
 
-def updateLatitud(map, registro, catalogo):
+def updateLatitud(map, registro):
     """
     Se toma la ciudad del registro y se busca si ya existe en el arbol
     dicha  ciudad.  Si es asi, se adiciona el registro a su lista de registros.
@@ -196,12 +203,12 @@ def addOrCreateListInMap(mapa, llave, elemento):
 # ___________________________________________________
 #REQ 1#
 def registrosPorCiudad(catalogo,nombreCiudad):
-    par= om.get(catalogo['indiceCiudad'], nombreCiudad)
+    par= mp.get(catalogo['indiceCiudad'], nombreCiudad)
     if par== None:
         registros=None
     else:
-        registros= me.getValue(par)
-        registros= m.sort(registros, cmpDatetime)
+        mapaFechaCiudad= me.getValue(par)
+        registros= om.valueSet(mapaFechaCiudad)
     return(registros)
 #REQ 2#
 def registrosEnRangoDuracion(catalogo,limiteMaximo,limiteMinimo):
@@ -246,12 +253,12 @@ def avistamientosRangoFecha (catalogo,inferior,superior):
     
 #REQ 5
 def avistamientosPorZonaGeografica(catologo,longitudMin,longitudMax,latitudMin,latitudMax):
-    mapLongitud=catologo["indiceLatitud"]
-    ListadeMapasenRangoLatitud=om.values(mapLongitud,latitudMin,latitudMax)
+    mapLatitud=catologo["indiceLatitud"]
+    ListadeMapasenRangoLatitud=om.values(mapLatitud,latitudMin,latitudMax)
     ListaRangoLatyLon= lt.newList("ARRAYLIST")
     for mapaLongitudes in lt.iterator(ListadeMapasenRangoLatitud):
         listaRegistros= om.values(mapaLongitudes,longitudMin,longitudMax)
-        for registro in listaRegistros:
+        for registro in lt.iterator(listaRegistros):
             lt.addLast(ListaRangoLatyLon,registro)
     return(ListaRangoLatyLon)
 # ___________________________________________________
