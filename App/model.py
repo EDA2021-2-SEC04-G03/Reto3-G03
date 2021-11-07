@@ -71,9 +71,7 @@ def newCatalog():
     catalogo['indiceFechas'] = om.newMap(omaptype='RBT',
                                       comparefunction=cmpFechas) 
     catalogo['indiceLatitud'] = om.newMap(omaptype='RBT',
-                                      comparefunction=cmpCoordenada) 
-    # catalogo['indiceLongitud'] = om.newMap(omaptype='RBT',
-    #                                   comparefunction=cmpLongitud)                                                                                               
+                                      comparefunction=cmpCoordenada)                                                                                            
     return catalogo
 # ___________________________________________________
 # Funciones para agregar informacion al catalogo

@@ -176,24 +176,25 @@ while True:
         print("Hay  "+str(numAvistamientos)+" avistamientos entre "+str(inferior)+" y "+ str(superior))
         primeros=lt.subList(info,1,3)
         size=lt.size(info)
-        ult=lt.subList(info,size-2,3)
-        print("Los primeros 3 registros son:")
-        x = PrettyTable() 
-        x.field_names = ["Fecha y hora","Ciudad", "Estado", "Pais", "Forma","Duracion (segundos)"]
-        for i in lt.iterator(primeros):
-            x.add_row([str(i["fechahora"]),str(i["ciudad"]),str(i["estado"]),str(i["pais"]),
-            str(i["forma"]),str(i["duracionsegundos"])])
-        x.max_width = 20
-        print(x)
-        print("------------------------------")
-        print("Los ultimos 3 registros son:")
-        a = PrettyTable() 
-        a.field_names = ["Fecha y hora","Ciudad", "Estado", "Pais", "Forma","Duracion (segundos)"]
-        for i in lt.iterator(ult):
-            x.add_row([str(i["fechahora"]),str(i["ciudad"]),str(i["estado"]),str(i["pais"]),
-            str(i["forma"]),str(i["duracionsegundos"])])
-        x.max_width = 20
-        print(a)
+        ult=lt.subList(info,lt.size(info)-2,3)
+        if size>=6:
+            print("Los primeros 3 registros son:")
+            x = PrettyTable() 
+            x.field_names = ["Fecha y hora","Ciudad", "Estado", "Pais", "Forma","Duracion (segundos)"]
+            for i in lt.iterator(primeros):
+                x.add_row([str(i["fechahora"]),str(i["ciudad"]),str(i["estado"]),str(i["pais"]),
+                str(i["forma"]),str(i["duracionsegundos"])])
+            x.max_width = 20
+            print(x)
+            print("------------------------------")
+            print("Los ultimos 3 registros son:")
+            a = PrettyTable() 
+            a.field_names = ["Fecha y hora","Ciudad", "Estado", "Pais", "Forma","Duracion (segundos)"]
+            for i in lt.iterator(ult):
+                a.add_row([str(i["fechahora"]),str(i["ciudad"]),str(i["estado"]),str(i["pais"]),
+                str(i["forma"]),str(i["duracionsegundos"])])
+            x.max_width = 20
+            print(a)
     elif int(inputs[0]) == 4:
         limiteMinimo  = input('Ingrese el límite inferior en formato AAAA-MM-DD:  ')
         limiteMaximo= input('Ingrese el límite superior en formato AAAA-MM-DD:  ')
