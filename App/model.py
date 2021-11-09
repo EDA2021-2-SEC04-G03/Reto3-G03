@@ -226,8 +226,8 @@ def registrosEnRangoDuracion(catalogo,limiteMaximo,limiteMinimo):
     listaDeMapas = om.values(catalogo['indiceDuracion'],limiteMinimo,limiteMaximo)
     if lt.isEmpty(listaDeMapas)==False:
         for Mapa in lt.iterator(listaDeMapas):
-            registrosCiudad= om.valueSet(Mapa)
-            for registros in lt.iterator(registrosCiudad):
+            registrosDuracion= om.valueSet(Mapa)
+            for registros in lt.iterator(registrosDuracion):
                 for registro in lt.iterator(registros):
                     lt.addLast(listaEnRango,registro)
     return listaEnRango
