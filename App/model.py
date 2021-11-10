@@ -107,11 +107,6 @@ def addRegistro(catalogo, registro):
 
 
 def updateIndiceCiudad(map,ciudad,fecha, registro):
-    """
-    Se toma la ciudad del registro y se busca si ya existe en el arbol
-    dicha  ciudad.  Si es asi, se adiciona el registro a su lista de registros.
-    Si no se encuentra creado un nodo para esa ciudad en el arbol se crea
-    """
     if mp.contains(map,ciudad)==False:
         mapaNuevoFecha= om.newMap(omaptype='RBT',comparefunction=cmpFechas)
         listaNueva=lt.newList("ARRAY_LIST")
@@ -140,11 +135,6 @@ def updateIndiceDuracion(map, registro):
     return map
 
 def updateHoraMinuto(map, registro):
-    """
-    Se toma la ciudad del registro y se busca si ya existe en el arbol
-    dicha  ciudad.  Si es asi, se adiciona el registro a su lista de registros.
-    Si no se encuentra creado un nodo para esa ciudad en el arbol se crea
-    """
     time=registro["fechahora"]
     duracion=datetime.time(time.hour,time.minute)
     if om.contains(map,duracion)==False:
@@ -236,8 +226,8 @@ def registrosEnRangoDuracion(catalogo,limiteMaximo,limiteMinimo):
     listaDeMapas = om.values(catalogo['indiceDuracion'],limiteMinimo,limiteMaximo)
     if lt.isEmpty(listaDeMapas)==False:
         for Mapa in lt.iterator(listaDeMapas):
-            registrosCiudad= om.valueSet(Mapa)
-            for registros in lt.iterator(registrosCiudad):
+            registrosDuracion= om.valueSet(Mapa)
+            for registros in lt.iterator(registrosDuracion):
                 for registro in lt.iterator(registros):
                     lt.addLast(listaEnRango,registro)
     return listaEnRango
