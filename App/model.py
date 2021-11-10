@@ -147,7 +147,17 @@ def updateHoraMinuto(map, registro):
     """
     time=registro["fechahora"]
     duracion=datetime.time(time.hour,time.minute)
-    addOrCreateListInMap(map,duracion,registro)
+    if om.contains(map,duracion)==False:
+        mapaNuevoHora= om.newMap(omaptype='RBT',comparefunction=cmpHoraMinuto)
+        listaNueva=lt.newList("ARRAY_LIST")
+        lt.addLast(listaNueva,registro)
+        om.put(mapaNuevoHora,time,listaNueva)
+        om.put(map,duracion,mapaNuevoHora)
+    else:
+        mapaExistente= om.get(map,duracion)["value"]
+        addOrCreateListInMap(mapaExistente,time,registro)
+        om.put(map,duracion,mapaExistente)
+    return map
 
 def updateFechas(map, registro):
     fechaHora=registro["fechahora"]
@@ -238,15 +248,14 @@ def NumAvistamientosPorHoraMinuto (catalogo,inferior,superior):
     superior=datetime.datetime.strptime(superior,"%H:%M:%S") 
     superior=datetime.time(superior.hour,superior.minute)
     mapMinutoHora=catalogo["indiceHoraMinuto"]
-    rangoKey=om.keys(mapMinutoHora,inferior,superior)
+    rangoKey=om.values(mapMinutoHora,inferior,superior)
     numAvistamientos=lt.size(rangoKey)
     listaInfo=lt.newList("ARRAY_LIST")
     for i in lt.iterator(rangoKey):
-        keyValue=om.get(mapMinutoHora,i)
-        value=me.getValue(keyValue)
+        value=om.valueSet(i)
         for n in lt.iterator(value):
-            lt.addLast(listaInfo,n)
-    listaInfo=m.sort(listaInfo,cmpDatetime)
+            for j in lt.iterator(n):
+                lt.addLast(listaInfo,j)
     dicRta={'avistamientos':numAvistamientos,'info':listaInfo}
     return(dicRta)
 #REQ 4
